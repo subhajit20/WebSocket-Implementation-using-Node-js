@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h3 id="myid">ClientId : </h3>
+    <input type="number" id="receiverid">
+    <button id="btn">Send</button>
+    <script>
+        const ws = new WebSocket('ws://localhost:8000');
+        const myid = document.getElementById('myid');
+        const receiverid = document.getElementById('receiverid');
+
+        const btn = document.getElementById('btn');
+        ws.onmessage = ({
+            data
+        }) => {
+            const {
+                roomname,
+                id
+            } = JSON.parse(data);
+            console.log(data)
+            myid.innerHTML = id;
+        }
+
+        btn.addEventListener('click', () => {
+            ws.send(JSON.stringify({
+                sender: myid.innerText,
+                msg: "Hellow Bro",
+                receiver: receiverid.value
+            }))
+
+            ws.onmessage = ({
+                msg
+            }) => {
+                console.log(msg)
+            }
+        })
+    </script>
+</body>
+
+</html>
