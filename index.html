@@ -2,46 +2,64 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
 </head>
 
 <body>
-    <h3 id="myid">ClientId : </h3>
-    <input type="number" id="receiverid">
-    <button id="btn">Send</button>
-    <script>
-        const ws = new WebSocket('ws://localhost:8000');
-        const myid = document.getElementById('myid');
-        const receiverid = document.getElementById('receiverid');
+    <h1>Your Order</h1>
+    <button class="shipped">Ship</button>
+    <button class="Delivery">Delivery</button>
+    <button class="other">Other</button>
+    <div class="progress" style="
+        height: 10px;
+        width: 2%;
+        background-color: green;
+        transition: all;
+        transition-duration: 5s;
+      "></div>
 
-        const btn = document.getElementById('btn');
+    <script>
+        const ws = new WebSocket("ws://localhost:8000");
+        const progress = document.querySelector(".progress");
+        const shipped = document.querySelector(".shipped");
+        const Delivery = document.querySelector(".Delivery");
+        const other = document.querySelector(".other");
+
+        const btn = document.getElementById("btn");
         ws.onmessage = ({
             data
         }) => {
-            const {
-                roomname,
-                id
-            } = JSON.parse(data);
-            console.log(data)
-            myid.innerHTML = id;
-        }
+            console.log(data);
+            progress.style.height = data + "px";
+        };
 
-        btn.addEventListener('click', () => {
-            ws.send(JSON.stringify({
-                sender: myid.innerText,
-                msg: "Hellow Bro",
-                receiver: receiverid.value
-            }))
-
-            ws.onmessage = ({
-                msg
-            }) => {
-                console.log(msg)
-            }
-        })
+        shipped.addEventListener("click", () => {
+            ws.send(
+                JSON.stringify({
+                    status: 10,
+                    event: "SHIPPED",
+                })
+            );
+        });
+        Delivery.addEventListener("click", () => {
+            ws.send(
+                JSON.stringify({
+                    status: 100,
+                    event: "DELIVERY",
+                })
+            );
+        });
+        other.addEventListener("click", () => {
+            ws.send(
+                JSON.stringify({
+                    status: 100,
+                    event: "OKK",
+                })
+            );
+        });
     </script>
 </body>
 
