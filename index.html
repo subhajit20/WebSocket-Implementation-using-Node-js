@@ -32,8 +32,10 @@
         ws.onmessage = ({
             data
         }) => {
-            console.log(data);
-            progress.style.height = data + "px";
+            console.log(JSON.parse(data));
+
+            // progress.style.height = data + "px";
+            progress.innerHTML += JSON.parse(data).msg;
         };
 
         shipped.addEventListener("click", () => {
